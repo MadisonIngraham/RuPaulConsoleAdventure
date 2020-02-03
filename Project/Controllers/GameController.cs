@@ -12,7 +12,6 @@ namespace ConsoleAdventure.Project.Controllers
     private GameService _gameService = new GameService();
     private bool _running = true;
 
-    //NOTE Makes sure everything is called to finish Setup and Starts the Game loop
 
     static void TypeLine(string line)
     {
@@ -42,7 +41,7 @@ namespace ConsoleAdventure.Project.Controllers
       ");
       Thread.Sleep(3000);
       Console.Clear();
-      TypeLine("You've recently moved to LA where the queen scene is POPPIN', henny! It's February 28, 2020... it's the season premiere for Season 12 of Ru Paul's Drag Race. You've been invited to a Ru Paul premiere party at, \nnone other than, Chaz Chadwick's house. He is only the most sickening social media content manager at your new company and you must win him over.");
+      TypeLine("You've recently moved to LA where the queen scene is POPPIN', henny! It's February 28, 2020... it's the season premiere for Season 12 of Ru Paul's Drag Race. You've been invited to a Ru Paul premiere party at, none other than, Chaz Chadwick's house. He is only the most sickening social media content manager at your new company and you must win him over.");
       Thread.Sleep(3000);
       Console.Clear();
       TypeLine("You need to SLAY at this party, girl. You've recruited the help of your roommate Ashleigh to help you do your fake lashes. Type 'start' to begin.");
@@ -51,6 +50,7 @@ namespace ConsoleAdventure.Project.Controllers
       while (_running)
       {
         _gameService.Messages.ForEach(Print);
+        //NOTE clear should go here, re evaluate why it didn't work before
         GetUserInput();
       }
     }
@@ -62,13 +62,12 @@ namespace ConsoleAdventure.Project.Controllers
       string input = Console.ReadLine().ToLower() + " ";
       string command = input.Substring(0, input.IndexOf(" "));
       string option = input.Substring(input.IndexOf(" ") + 1).Trim();
-      //NOTE this will take the user input and parse it into a command and option.
-      //IE: take silver key => command = "take" option = "silver key"
 
       switch (command)
       {
         case "start":
           _gameService.InitialEntry();
+          _gameService.Look();
           break;
         case "quit":
         case "exit":
@@ -76,7 +75,7 @@ namespace ConsoleAdventure.Project.Controllers
           break;
         case "go":
           _gameService.Go(option);
-          _gameService.Welcome();
+          _gameService.Look();
           break;
         case "look":
           _gameService.Look();
@@ -90,6 +89,15 @@ namespace ConsoleAdventure.Project.Controllers
         case "use":
           _gameService.UseItem(option);
           break;
+        case "inventory":
+          _gameService.Inventory();
+          return;
+        case "eat":
+          _gameService.Eat(option);
+          return;
+        case "drink":
+          _gameService.Drink(option);
+          return;
       }
     }
 

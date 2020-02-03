@@ -20,13 +20,8 @@ namespace ConsoleAdventure.Project
 
     public void InitialEntry()
     {
-      Messages.Add($"Welcome home, babe! You've entered the {_game.CurrentRoom.Name}. Sounds like Ashleigh is jamming out to Sam Smith. You notice some chocolate on the counter. Remember - you need get your lashes done and get dolled up for this party! Hurry!");
+      Messages.Add($"Welcome home, queen! Sounds like Ashleigh is jamming out to Sam Smith. Remember - you need get your lashes done and get dolled up for this party! Hurry!");
       return;
-    }
-
-    public void Welcome()
-    {
-      Messages.Add($"{_game.CurrentRoom.Description}");
     }
 
 
@@ -37,7 +32,7 @@ namespace ConsoleAdventure.Project
         Messages.Clear();
         Messages.Add("I don't walk... I strut!");
         Thread.Sleep(3000);
-        Console.Clear();
+        Console.Clear(); //NOTE console interactions should be through the controller
         _game.CurrentRoom = _game.CurrentRoom.Exits[direction];
         return;
       }
@@ -62,20 +57,26 @@ namespace ConsoleAdventure.Project
 
     public void Inventory()
     {
-      throw new System.NotImplementedException();
+      Messages.Clear();
+      Messages.Add("Your inventory: ");
+      foreach (var item in _game.CurrentPlayer.Inventory)
+      {
+        Messages.Add($"- {item.Name}");
+      }
+      return;
     }
 
     public void Look()
     {
-      Messages.Clear();
       Messages.Add($"{_game.CurrentRoom.Description}");
+      Messages.Add("Items in this room:");
+      foreach (var item in _game.CurrentRoom.Items)
+      {
+        Messages.Add($"- {item.Name}");
+      }
       return;
     }
 
-    public void Quit()
-    {
-      throw new System.NotImplementedException();
-    }
     ///<summary>
     ///Restarts the game 
     ///</summary>
@@ -91,15 +92,17 @@ namespace ConsoleAdventure.Project
     ///<summary>When taking an item be sure the item is in the current room before adding it to the player inventory, Also don't forget to remove the item from the room it was picked up in</summary>
     public void TakeItem(string itemName)
     {
-      if (_game.CurrentRoom.Items.Count == 0)
+      Item found = _game.CurrentRoom.Items.Find(i => i.Name.ToLower() == itemName);
+      if (found == null)
       {
         Messages.Clear();
-        Messages.Add("There are no items to pick up in this room.");
+        Messages.Add("No such item, henny.");
+        return;
       }
-      _game.CurrentPlayer.Inventory.AddRange(_game.CurrentRoom.Items);
+      _game.CurrentPlayer.Inventory.Add(found);
       Messages.Clear();
       Messages.Add("You picked up " + itemName);
-      _game.CurrentRoom.Items.Clear();
+      _game.CurrentRoom.Items.Remove(found);
     }
     ///<summary>
     ///No need to Pass a room since Items can only be used in the CurrentRoom
@@ -108,16 +111,84 @@ namespace ConsoleAdventure.Project
     ///</summary>
     public void UseItem(string itemName)
     {
-      if (_game.CurrentPlayer.Inventory.Count == 0)
+      Item itemToUse = _game.CurrentPlayer.Inventory.Find(i => i.Name.ToLower() == itemName);
+      if (itemToUse == null)
       {
         Messages.Clear();
-        Messages.Add("You don't have any items to use.");
+        Messages.Add("You don't have that item, girl.");
+        return;
       }
-      if (_game.CurrentRoom.Name == "Ashleigh's Room" && itemName == "chocolate")
+
+      if (_game.CurrentRoom.Name == "Ashleigh's Room" && itemName == "chocolate" || itemName == "wine")
       {
         Messages.Clear();
-        Messages.Add("You hand the chocolate to your withering roomate. She sniffles a thank you.");
+        Messages.Add("You put your hand on the back of your withering roomate. She sniffles that her boyfriend had just broken up with her that afternoon. 'Brad doesn't even deserve you, don't waste tears on him, girl.' Enjoy this treat on me!");
+        _game.CurrentPlayer._consoledAsh = true;
+        _game.CurrentPlayer.Inventory.Remove(itemToUse);
+        return;
       }
+
+      if (_game.CurrentRoom.Name == "Ashleigh's Room" && itemName == "lashes" && _game.CurrentPlayer._consoledAsh == true)
+      {
+        Messages.Clear();
+        Messages.Add("Ashleigh is happy to help with your lashes now that she's totally over Brad! She glues on your lashes PERFECTLY!");
+        _game.CurrentPlayer._lashesOn = true;
+        _game.CurrentPlayer.Inventory.Remove(itemToUse);
+        return;
+      }
+      Messages.Clear();
+      Messages.Add("Hey! Is your friend crying, GIRL?!Cheer her up before you ask any favors.");
+      return;
+    }
+
+
+    public void Eat(string itemName)
+    {
+      Item itemToEat = _game.CurrentPlayer.Inventory.Find(i => i.Name.ToLower() == itemName);
+      if (itemToEat == null)
+      {
+        Messages.Clear();
+        Messages.Add("You don't have that item, sis.");
+        return;
+      }
+
+      if (itemName != "chocolate")
+      {
+        Messages.Clear();
+        Messages.Add("Honey, you cannot eat this.");
+        return;
+      }
+      Messages.Clear();
+      Messages.Add("Hershey's chocolate! My favorite! You start munching down the chocolate bar... Ashleigh comes storming out of her room. 'YOU ATE MY CHOCOLATE?! How could you? I am never helping you with your lashes ever again!!!");
+      Messages.Add("That chocolate was supposed to be for your friend, sis. You lose.");
+      return;
+    }
+
+    public void Drink(string itemName)
+    {
+      Item itemToDrink = _game.CurrentPlayer.Inventory.Find(i => i.Name.ToLower() == itemName);
+      if (itemToDrink == null)
+      {
+        Messages.Clear();
+        Messages.Add("You don't have that item, sis.");
+        return;
+      }
+
+      if (itemName != "wine")
+      {
+        Messages.Clear();
+        Messages.Add("Honey, you cannot drink this.");
+        return;
+      }
+      Messages.Clear();
+      Messages.Add("Moscato?! Don't mind if I do! *glug* *glug* *glug* \nAshleigh comes out of her room. 'That wine was for me to watch the Bachelor tonight!! How could you? I am never helping you with your lashes ever again!!!");
+      Messages.Add("That wine was supposed to be for your friend, sis. You lose.");
+      return;
+    }
+
+    public void Quit()
+    {
+      System.Environment.Exit(0);
     }
   }
 }

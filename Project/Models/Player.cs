@@ -8,6 +8,13 @@ namespace ConsoleAdventure.Project.Models
     public string Name { get; set; }
     public List<Item> Inventory { get; set; }
 
+    bool IPlayer._consoledAsh { get; set; } = false;
+    bool IPlayer._lashesOn { get; set; } = false;
+    bool IPlayer._haveFan { get; set; } = false;
+    bool IPlayer._winDanceOff { get; set; } = false;
+    bool IPlayer._impressChad { get; set; } = false;
+
+
 
     public Player(string name)
     {
