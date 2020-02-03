@@ -45,10 +45,9 @@ namespace ConsoleAdventure.Project.Controllers
       TypeLine("You've recently moved to LA where the queen scene is POPPIN', henny! It's February 28, 2020... it's the season premiere for Season 12 of Ru Paul's Drag Race. You've been invited to a Ru Paul premiere party at, \nnone other than, Chaz Chadwick's house. He is only the most sickening social media content manager at your new company and you must win him over.");
       Thread.Sleep(3000);
       Console.Clear();
-      TypeLine("You need to SLAY at this party, girl. You've recruited the help of your roommate Ashleigh to help you do your fake lashes. Beat that face, sis!");
+      TypeLine("You need to SLAY at this party, girl. You've recruited the help of your roommate Ashleigh to help you do your fake lashes. Type 'start' to begin.");
       Thread.Sleep(3000);
       Console.Clear();
-      _gameService.InitialEntry();
       while (_running)
       {
         _gameService.Messages.ForEach(Print);
@@ -68,19 +67,19 @@ namespace ConsoleAdventure.Project.Controllers
       //NOTE this will take the user input and parse it into a command and option.
       //IE: take silver key => command = "take" option = "silver key"
 
-      switch (input)
+      switch (command)
       {
+        case "start":
+          _gameService.InitialEntry();
+          break;
         case "quit":
         case "cancel":
         case "exit":
           _running = false;
           break;
-      }
-
-      switch (command)
-      {
         case "go":
           _gameService.Go(option);
+          _gameService.Welcome();
           break;
       }
 

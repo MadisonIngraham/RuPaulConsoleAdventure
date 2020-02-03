@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using ConsoleAdventure.Project.Interfaces;
 using ConsoleAdventure.Project.Models;
+using System;
+using System.Threading;
 
 namespace ConsoleAdventure.Project
 {
@@ -19,15 +21,28 @@ namespace ConsoleAdventure.Project
     public void InitialEntry()
     {
       Messages.Add($"Welcome home, babe! You've entered the {_game.CurrentRoom.Name}. Sounds like Ashleigh is jamming out to Sam Smith. You notice there's a bottle of wine and some chocolate on the counter. Remember - you need get your lashes done\n and get dolled up for this party! Hurry!");
+      return;
+    }
+
+    public void Welcome()
+    {
+      Messages.Add($"Welcome to {_game.CurrentRoom.Name}!");
     }
 
 
     public void Go(string direction)
     {
-      if (_game.CurrentRoom.Name == "Kitchen" && direction == "east")
+      if (_game.CurrentRoom.Exits.ContainsKey(direction))
       {
-        Messages.Add("I don't walk... I STRUT!");
+        Messages.Clear();
+        Messages.Add("I don't walk... I strut!");
+        Thread.Sleep(3000);
+        Console.Clear();
+        _game.CurrentRoom = _game.CurrentRoom.Exits[direction];
+        return;
       }
+      Messages.Clear();
+      Messages.Add("You can't go that direction in this room.");
     }
     public void Help()
     {

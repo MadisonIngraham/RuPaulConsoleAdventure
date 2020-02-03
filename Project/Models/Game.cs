@@ -20,14 +20,14 @@ namespace ConsoleAdventure.Project.Models
       Room ChazMainRoom = new Room("Chaz's Main Room", "Enter the main room of Chaz Chadwick's house. It's a big house with high ceilings. To your right, there is a tall oak entertainment system with no TV. To the left is the kitchen, packed with people screaming along the Todrick Hall song playing loudly.");
       Room ChazRoom = new Room("Chaz's Room", "Enter Chaz's room. Through hanging beads at the door, of course. The lights are dim and Chaz sits across the room in a pink fluffy chair surrounded by his queens.");
 
-      MyKitchen.Exits.Add("My Room", MyRoom);
-      MyKitchen.Exits.Add("Ashleigh's Room", AshleighRoom);
-      MyKitchen.Exits.Add("Chaz's Main Room", ChazMainRoom);
-      MyRoom.Exits.Add("Kitchen", MyKitchen);
-      AshleighRoom.Exits.Add("Kitchen", MyKitchen);
-      ChazMainRoom.Exits.Add("Chaz's Room", ChazRoom);
-      ChazMainRoom.Exits.Add("Kitchen", MyKitchen);
-      ChazRoom.Exits.Add("Chaz's Main Room", ChazMainRoom);
+      MyKitchen.Exits.Add("east", MyRoom);
+      MyKitchen.Exits.Add("west", AshleighRoom);
+      MyKitchen.Exits.Add("south", ChazMainRoom);
+      MyRoom.Exits.Add("west", MyKitchen);
+      AshleighRoom.Exits.Add("east", MyKitchen);
+      ChazMainRoom.Exits.Add("west", ChazRoom);
+      ChazMainRoom.Exits.Add("south", MyKitchen);
+      ChazRoom.Exits.Add("east", ChazMainRoom);
 
       CurrentRoom = MyKitchen;
       CurrentPlayer = Player1;
