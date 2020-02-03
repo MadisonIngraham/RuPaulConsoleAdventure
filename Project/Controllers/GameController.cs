@@ -18,7 +18,7 @@ namespace ConsoleAdventure.Project.Controllers
       for (int i = 0; i < line.Length; i++)
       {
         Console.Write(line[i]);
-        System.Threading.Thread.Sleep(65); // milliseconds
+        System.Threading.Thread.Sleep(50); // milliseconds
       }
     }
 
@@ -53,6 +53,8 @@ namespace ConsoleAdventure.Project.Controllers
         //NOTE clear should go here, re evaluate why it didn't work before
         GetUserInput();
       }
+      Console.Clear();
+      Console.WriteLine("Game over.");
     }
 
 
@@ -66,6 +68,7 @@ namespace ConsoleAdventure.Project.Controllers
       switch (command)
       {
         case "start":
+          Console.Clear();
           _gameService.InitialEntry();
           _gameService.Look();
           break;
@@ -91,13 +94,21 @@ namespace ConsoleAdventure.Project.Controllers
           break;
         case "inventory":
           _gameService.Inventory();
-          return;
+          break;
         case "eat":
           _gameService.Eat(option);
-          return;
+          _gameService.Messages.ForEach(Print);
+          Console.ReadKey();
+          Console.Clear();
+          _running = false;
+          break;
         case "drink":
           _gameService.Drink(option);
-          return;
+          _gameService.Messages.ForEach(Print);
+          Console.ReadKey();
+          Console.Clear();
+          _running = false;
+          break;
       }
     }
 

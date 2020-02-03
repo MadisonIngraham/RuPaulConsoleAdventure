@@ -161,7 +161,8 @@ namespace ConsoleAdventure.Project
       Messages.Clear();
       Messages.Add("Hershey's chocolate! My favorite! You start munching down the chocolate bar... Ashleigh comes storming out of her room. 'YOU ATE MY CHOCOLATE?! How could you? I am never helping you with your lashes ever again!!!");
       Messages.Add("That chocolate was supposed to be for your friend, sis. You lose.");
-      return;
+      Thread.Sleep(6000);
+      Messages.Add("Press any key...");
     }
 
     public void Drink(string itemName)
@@ -182,13 +183,9 @@ namespace ConsoleAdventure.Project
       }
       Messages.Clear();
       Messages.Add("Moscato?! Don't mind if I do! *glug* *glug* *glug* \nAshleigh comes out of her room. 'That wine was for me to watch the Bachelor tonight!! How could you? I am never helping you with your lashes ever again!!!");
-      Messages.Add("That wine was supposed to be for your friend, sis. You lose.");
-      return;
-    }
-
-    public void Quit()
-    {
-      System.Environment.Exit(0);
+      Messages.Add("That wine was supposed to be for your friend, sis.");
+      Thread.Sleep(6000);
+      Messages.Add("Press any key...");
     }
   }
 }
