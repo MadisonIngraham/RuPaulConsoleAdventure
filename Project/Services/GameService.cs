@@ -20,13 +20,13 @@ namespace ConsoleAdventure.Project
 
     public void InitialEntry()
     {
-      Messages.Add($"Welcome home, babe! You've entered the {_game.CurrentRoom.Name}. Sounds like Ashleigh is jamming out to Sam Smith. You notice there's a bottle of wine and some chocolate on the counter. Remember - you need get your lashes done\n and get dolled up for this party! Hurry!");
+      Messages.Add($"Welcome home, babe! You've entered the {_game.CurrentRoom.Name}. Sounds like Ashleigh is jamming out to Sam Smith. You notice some chocolate on the counter. Remember - you need get your lashes done and get dolled up for this party! Hurry!");
       return;
     }
 
     public void Welcome()
     {
-      Messages.Add($"Welcome to {_game.CurrentRoom.Name}!");
+      Messages.Add($"{_game.CurrentRoom.Description}");
     }
 
 
@@ -46,7 +46,18 @@ namespace ConsoleAdventure.Project
     }
     public void Help()
     {
-      throw new System.NotImplementedException();
+      Messages.Clear();
+      Messages.Add(@"Available Commands
+----------------------------
+    - Go 
+    - Use
+    - Take 
+    - Look 
+    - Inventory
+    - Help 
+    - Quit
+      ");
+      return;
     }
 
     public void Inventory()
@@ -56,7 +67,9 @@ namespace ConsoleAdventure.Project
 
     public void Look()
     {
-      throw new System.NotImplementedException();
+      Messages.Clear();
+      Messages.Add($"{_game.CurrentRoom.Description}");
+      return;
     }
 
     public void Quit()
@@ -78,7 +91,15 @@ namespace ConsoleAdventure.Project
     ///<summary>When taking an item be sure the item is in the current room before adding it to the player inventory, Also don't forget to remove the item from the room it was picked up in</summary>
     public void TakeItem(string itemName)
     {
-      throw new System.NotImplementedException();
+      if (_game.CurrentRoom.Items.Count == 0)
+      {
+        Messages.Clear();
+        Messages.Add("There are no items to pick up in this room.");
+      }
+      _game.CurrentPlayer.Inventory.AddRange(_game.CurrentRoom.Items);
+      Messages.Clear();
+      Messages.Add("You picked up " + itemName);
+      _game.CurrentRoom.Items.Clear();
     }
     ///<summary>
     ///No need to Pass a room since Items can only be used in the CurrentRoom
@@ -87,7 +108,16 @@ namespace ConsoleAdventure.Project
     ///</summary>
     public void UseItem(string itemName)
     {
-      throw new System.NotImplementedException();
+      if (_game.CurrentPlayer.Inventory.Count == 0)
+      {
+        Messages.Clear();
+        Messages.Add("You don't have any items to use.");
+      }
+      if (_game.CurrentRoom.Name == "Ashleigh's Room" && itemName == "chocolate")
+      {
+        Messages.Clear();
+        Messages.Add("You hand the chocolate to your withering roomate. She sniffles a thank you.");
+      }
     }
   }
 }
