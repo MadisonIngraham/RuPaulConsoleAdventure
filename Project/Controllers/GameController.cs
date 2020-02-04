@@ -18,7 +18,7 @@ namespace ConsoleAdventure.Project.Controllers
       for (int i = 0; i < line.Length; i++)
       {
         Console.Write(line[i]);
-        System.Threading.Thread.Sleep(50); // milliseconds
+        System.Threading.Thread.Sleep(40); // milliseconds
       }
     }
 
@@ -54,7 +54,7 @@ namespace ConsoleAdventure.Project.Controllers
         GetUserInput();
       }
       Console.Clear();
-      Console.WriteLine("Game over.");
+      Console.WriteLine("You're still a queen to me!!!!!");
     }
 
 
@@ -78,7 +78,6 @@ namespace ConsoleAdventure.Project.Controllers
           break;
         case "go":
           _gameService.Go(option);
-          _gameService.Look();
           break;
         case "look":
           _gameService.Look();
@@ -108,6 +107,16 @@ namespace ConsoleAdventure.Project.Controllers
           Console.ReadKey();
           Console.Clear();
           _running = false;
+          break;
+        case "talk":
+          _gameService.Talk();
+          break;
+        case "amen":
+          _gameService.Talk();
+          break;
+        case "yvie":
+        case "yvie oddly":
+          _gameService.WinGame();
           break;
       }
     }

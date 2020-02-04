@@ -34,6 +34,7 @@ namespace ConsoleAdventure.Project
         Thread.Sleep(3000);
         Console.Clear(); //NOTE console interactions should be through the controller
         _game.CurrentRoom = _game.CurrentRoom.Exits[direction];
+        Look();
         return;
       }
       Messages.Clear();
@@ -43,11 +44,14 @@ namespace ConsoleAdventure.Project
     {
       Messages.Clear();
       Messages.Add(@"Available Commands
-----------------------------
+---------------------
     - Go 
     - Use
     - Take 
     - Look 
+    - Drink
+    - Eat
+    - Talk
     - Inventory
     - Help 
     - Quit
@@ -68,6 +72,7 @@ namespace ConsoleAdventure.Project
 
     public void Look()
     {
+      Messages.Clear();
       Messages.Add($"{_game.CurrentRoom.Description}");
       Messages.Add("Items in this room:");
       foreach (var item in _game.CurrentRoom.Items)
@@ -103,6 +108,11 @@ namespace ConsoleAdventure.Project
       Messages.Clear();
       Messages.Add("You picked up " + itemName);
       _game.CurrentRoom.Items.Remove(found);
+      if (found.Name == "hand fan")
+      {
+        _game.CurrentPlayer._haveFan = true;
+      }
+      return;
     }
     ///<summary>
     ///No need to Pass a room since Items can only be used in the CurrentRoom
@@ -122,23 +132,60 @@ namespace ConsoleAdventure.Project
       if (_game.CurrentRoom.Name == "Ashleigh's Room" && itemName == "chocolate" || itemName == "wine")
       {
         Messages.Clear();
-        Messages.Add("You put your hand on the back of your withering roomate. She sniffles that her boyfriend had just broken up with her that afternoon. 'Brad doesn't even deserve you, don't waste tears on him, girl.' Enjoy this treat on me!");
+        Messages.Add("You put your hand on the back of your withering roomate and offer her the treats. She wipes her eyes and wimpers a thank you. Hugging her tight, you tell her no boy is worth these tears, henny. \nCan I get an 'amen'?");
         _game.CurrentPlayer._consoledAsh = true;
         _game.CurrentPlayer.Inventory.Remove(itemToUse);
+        return;
+      }
+
+      if (_game.CurrentRoom.Name != "Ashleigh's Room" && itemName == "lashes")
+      {
+        Messages.Clear();
+        Messages.Add("You don't really need those right now, hun. I'd just hold onto them until you're ready for Ashleigh to apply them for you. Ya know?!");
         return;
       }
 
       if (_game.CurrentRoom.Name == "Ashleigh's Room" && itemName == "lashes" && _game.CurrentPlayer._consoledAsh == true)
       {
         Messages.Clear();
-        Messages.Add("Ashleigh is happy to help with your lashes now that she's totally over Brad! She glues on your lashes PERFECTLY!");
+        Messages.Add("Ashleigh is happy to help with your lashes now that she's totally over Brad! She performs a perfect place with the lashes and you can't help but BLINK FOR THESE HOES! Fierce girl!");
         _game.CurrentPlayer._lashesOn = true;
         _game.CurrentPlayer.Inventory.Remove(itemToUse);
         return;
       }
-      Messages.Clear();
-      Messages.Add("Hey! Is your friend crying, GIRL?!Cheer her up before you ask any favors.");
-      return;
+
+      if (_game.CurrentRoom.Name == "Ashleigh's Room" && itemName == "lashes" && _game.CurrentPlayer._consoledAsh == false)
+      {
+        Messages.Clear();
+        Messages.Add("Girl, Is your friend CRYING right now?! You better cheer her up before you ask any favors!");
+        return;
+      }
+
+      if (_game.CurrentRoom.Name != "Chaz's Main Room" && itemName == "hand fan")
+      {
+        Messages.Clear();
+        Messages.Add("I don't need any music to bust a move, let's get it!");
+        Thread.Sleep(3000);
+        Console.Clear();
+        Messages.Add("*vogue, vogue, fan, fan, spin, twirl and HIT!*");
+        return;
+      }
+
+      if (itemName == "hand fan" && _game.CurrentPlayer._haveFan == true && _game.CurrentPlayer._lashesOn == true)
+      {
+        Messages.Clear();
+        Messages.Add("You remember you snagged the hand fan from Ashleigh's room. And with the word of Todrick Hall to the beat, you hear... 'fan for me, fan for me!' You start voguing into the dance floor and the crowd goes wild. \nYou're twirling, you're snapping, you're fanning! You're giving it everything you've got sweetie!!! \nA girl with half brown, half blonde hair comes up to you. 'GIRL! That was incredible! You have to meet Chaz, he'd totally love you. He's in his room!");
+        _game.CurrentPlayer._winDanceOff = true;
+        return;
+      }
+
+
+      if (itemName == "hand fan" && _game.CurrentPlayer._lashesOn == false || _game.CurrentPlayer._haveFan == false)
+      {
+        Messages.Clear();
+        Messages.Add("You start casually dancing in the middle of the dance floor, keeping it at a casual bounce. You step into the dance floor but you're not drawing any attention... Honey, you're not going to win over Chaz this way. Maybe you should go back to your house and try to find something to add to your glam factor.");
+        return;
+      }
     }
 
 
@@ -159,10 +206,7 @@ namespace ConsoleAdventure.Project
         return;
       }
       Messages.Clear();
-      Messages.Add("Hershey's chocolate! My favorite! You start munching down the chocolate bar... Ashleigh comes storming out of her room. 'YOU ATE MY CHOCOLATE?! How could you? I am never helping you with your lashes ever again!!!");
-      Messages.Add("That chocolate was supposed to be for your friend, sis. You lose.");
-      Thread.Sleep(6000);
-      Messages.Add("Press any key...");
+      Messages.Add("Chocolate?! YAAASSSS! You start munch down that chocolate bar, queen! Ashleigh comes out of her room and into the kitchen... She is not happy about you eating her chocolate bar! 'YOU ATE MY CHOCOLATE?! How could you? I am never helping you with your lashes ever again!!!' Girl, that chocolate was supposed to be for your friend. Press any key to sashay away...");
     }
 
     public void Drink(string itemName)
@@ -178,14 +222,56 @@ namespace ConsoleAdventure.Project
       if (itemName != "wine")
       {
         Messages.Clear();
-        Messages.Add("Honey, you cannot drink this.");
+        Messages.Add("Honey, you can't drink this.");
         return;
       }
       Messages.Clear();
-      Messages.Add("Moscato?! Don't mind if I do! *glug* *glug* *glug* \nAshleigh comes out of her room. 'That wine was for me to watch the Bachelor tonight!! How could you? I am never helping you with your lashes ever again!!!");
-      Messages.Add("That wine was supposed to be for your friend, sis.");
-      Thread.Sleep(6000);
-      Messages.Add("Press any key...");
+      Messages.Add("Moscato?! Don't mind if I do! *glug* *glug* *glug* \nOh no! You're swaying and hiccupping... girl, you're too drunk for this party! Go to bed! Press any key to sashay away...");
+    }
+
+    public void Talk()
+    {
+      if (_game.CurrentRoom.Name == "Ashleigh's Room" && _game.CurrentPlayer._consoledAsh == false)
+      {
+        Messages.Clear();
+        Messages.Add("Ashleigh says: 'You would NEVER believe the day I'm having! Brad broke up with me!!! Sis, I am crushed. I have a date with the wine bottle and choclate bar on the kitchen table tonight.'");
+        return;
+      }
+
+      if (_game.CurrentRoom.Name != "Ashleigh's Room" && _game.CurrentRoom.Name != "Chaz's Room")
+      {
+        Messages.Clear();
+        Messages.Add("There's not really anyone to talk to here.");
+        return;
+      }
+
+      if (_game.CurrentRoom.Name == "Ashleigh's Room" && _game.CurrentPlayer._consoledAsh == true)
+      {
+        Messages.Clear();
+        Messages.Add("Ashleigh says: 'Thanks girl! Where would I be without you??'");
+        return;
+      }
+
+      if (_game.CurrentRoom.Name == "Chaz's Room" && _game.CurrentPlayer._winDanceOff == false)
+      {
+        Messages.Clear();
+        Messages.Add("Chaz is throwing HELLA shade, what's his problem?! He says, 'Who do you even know here? Don't come back in here  until you're somebody worth talking to!!'");
+        return;
+      }
+
+      if (_game.CurrentRoom.Name == "Chaz's Room" && _game.CurrentPlayer._winDanceOff == true)
+      {
+        Messages.Clear();
+        Messages.Add("Chaz stands up to greet you. He says, 'There you are! Heard you threw it down out there, that's hot. But I only hangout with true Ru Paul fans only. Prepare for the final question... \nOnly real fans will know the answer to this question... which queen was the winner of last season, season 11?");
+        return;
+      }
+    }
+
+    public void WinGame()
+    {
+      Messages.Clear();
+      Messages.Add("YOU ARE A WINNER! I knew you were a real fan!");
+      return;
     }
   }
 }
